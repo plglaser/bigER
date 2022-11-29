@@ -31,16 +31,16 @@ jobs:
       - name: Build Webview
         run: yarn --cwd webview
       - name: Build Extension
-        run: cd extension && yarn
+        run: yarn --cwd extension
       - name: Package Extension
-        run: yarn run package
+        run: yarn --cwd extension run package
 #      - name: Publish
 #        run: yarn vsce publish --yarn --packagePath ./${{ env.PACKAGE_NAME }}.vsix -p ${{ secrets.GITLENS_VSCODE_MARKETPLACE_PAT }}
       - name: Generate Changelog
         uses: mindsers/changelog-reader-action@v2
         with:
           version: ${{ env.PACKAGE_VERSION }}
-          path: ./CHANGELOG.md
+          path: ./extension/CHANGELOG.md
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         env:
@@ -51,4 +51,4 @@ jobs:
           body: ${{ steps.changelog.outputs.changes }}
           draft: false
           prerelease: false
-          files: ./${{ env.PACKAGE_NAME }}.vsix
+          files: ./extension/${{ env.PACKAGE_NAME }}.vsix
