@@ -12,15 +12,14 @@ on:
       - main
 
 jobs:
-  # builds the server using Gradle on ubuntu, macos, windows with java 11, 17
-  build-server:
+  ci:
     strategy:
       matrix:
         java: [ 11 ]
         node: ['16']
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} (Java ${{ matrix.java }} and Node ${{ matrix.node }})
+    name: ${{ matrix.os }} (Java ${{ matrix.java }} Node ${{ matrix.node }})
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -34,9 +33,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+          cache: 'yarn'
       - name: Build and Test Language Server
         run: language-server/gradlew -p language-server/ build --no-daemon
       - name: Build Webview
-        run: yarn --cwd webview
+        run: yarn --cwd webview --frozen-lockfile --immutable
       - name: Build Extension
-        run: yarn --cwd extension
+        run: yarn --cwd extension --frozen-lockfile --immutable
