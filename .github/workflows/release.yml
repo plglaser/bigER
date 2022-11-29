@@ -1,13 +1,13 @@
-name: Publish Release
+name: Create Release
 
 on:
   push:
     tags:
-      - 'v*.*.*' # e.g. v1.0, v1.10.5
+      - 'v*' # e.g. v1.0, v1.10.5
 
 jobs:
   build:
-    name: Publish Release
+    name: Create Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Environment
         run: node -e "console.log('PACKAGE_VERSION=' + require('./extension/package.json').version + '\nPACKAGE_NAME=erdiagram-' + require('./extension/package.json').version)" >> $GITHUB_ENV
       - name: Verify version
-        run: node -e "if ('refs/tags/v' + '${{ env.PACKAGE_VERSION }}' !== '${{ github.ref }}') { console.log('::error' + 'Version Mismatch. refs/tags/v' + '${{ env.PACKAGE_VERSION }}', '${{ github.ref }}'); throw Error('Version Mismatch')}"
+        run: node -e "if ('refs/tags/v' + '${{ env.PACKAGE_VERSION }}' !== '${{ github.ref }}') { console.log('::error' + 'Versions do not match. refs/tags/v' + '${{ env.PACKAGE_VERSION }}', '${{ github.ref }}'); throw Error('Version Mismatch')}"
       - name: Build Server
         run: language-server/gradlew -p language-server/ build --no-daemon
       - name: Build Webview
@@ -39,6 +39,7 @@ jobs:
 #      - name: Publish
 #        run: yarn vsce publish --yarn --packagePath ./${{ env.PACKAGE_NAME }}.vsix -p ${{ secrets.GITLENS_VSCODE_MARKETPLACE_PAT }}
       - name: Generate Changelog
+        id: changelog
         uses: mindsers/changelog-reader-action@v2
         with:
           version: ${{ env.PACKAGE_VERSION }}
