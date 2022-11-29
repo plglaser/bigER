@@ -1,12 +1,14 @@
 name: Create Release
 
+# run workflow on newly created tags including the prefix 'v', e.g. v1.0 or v2.10.5-pre
 on:
   push:
     tags:
-      - 'v*' # e.g. v1.0, v1.10.5
+      - 'v*'
 
 jobs:
-  build:
+  # Builds the project and creates a github release with a changelog and packages .vsix file
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     permissions:
@@ -36,8 +38,9 @@ jobs:
         run: yarn --cwd extension
       - name: Package Extension
         run: yarn --cwd extension run package
+# TODO: Publish .vsix to vscode marketplace (if not suffix '-pre')
 #      - name: Publish
-#        run: yarn vsce publish --yarn --packagePath ./${{ env.PACKAGE_NAME }}.vsix -p ${{ secrets.GITLENS_VSCODE_MARKETPLACE_PAT }}
+#        run: yarn --cwd extension run vsce publish --packagePath ./${{ env.PACKAGE_NAME }}.vsix -p ${{ secrets.BIGER_VSCODE_MARKETPLACE_PAT }}
       - name: Generate Changelog
         id: changelog
         uses: mindsers/changelog-reader-action@v2
