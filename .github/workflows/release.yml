@@ -27,7 +27,7 @@ jobs:
       - name: Verify version
         run: node -e "if ('refs/tags/v' + '${{ env.PACKAGE_VERSION }}' !== '${{ github.ref }}') { console.log('::error' + 'Version Mismatch. refs/tags/v' + '${{ env.PACKAGE_VERSION }}', '${{ github.ref }}'); throw Error('Version Mismatch')}"
       - name: Build Server
-        run: language-server/gradlew -p language-server/ build --no-deamon
+        run: language-server/gradlew -p language-server/ build --no-daemon
       - name: Build Webview
         run: yarn --cwd webview
       - name: Build Extension
