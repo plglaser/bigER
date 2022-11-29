@@ -9,6 +9,8 @@ jobs:
   build:
     name: Publish Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
