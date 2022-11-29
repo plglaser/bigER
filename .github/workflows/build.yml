@@ -1,7 +1,5 @@
-# matrix build of server (Java) and client (Node)
 name: Build and Test
 
-# run workflow on pushes/pull requests to main or manually
 on: 
   workflow_dispatch:
   push:
@@ -33,10 +31,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
-      - name: Build and Test Language Server
+      - name: Build Language Server
         run: language-server/gradlew -p language-server/ build --no-daemon
       - name: Build Webview
-        run: yarn --cwd webview --frozen-lockfile --immutable
+        run: yarn --cwd webview
       - name: Build Extension
-        run: yarn --cwd extension --frozen-lockfile --immutable
+        run: yarn --cwd extension
