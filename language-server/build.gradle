@@ -8,6 +8,10 @@ buildscript {
 	}
 }
 
+plugins {
+  id "org.sonarqube" version "3.5.0.2730"
+}
+
 subprojects {
 	group = 'org.big.erd'
 	//version = '0.1.0-SNAPSHOT'
@@ -44,6 +48,13 @@ subprojects {
 	}
 	jacocoTestReport {
     	dependsOn test // tests are required to run before generating the report
+	}
+	sonarqube {
+  		properties {
+    		property "sonar.projectKey", "bigER-server"
+    		property "sonar.organization", "plglaser"
+    		property "sonar.host.url", "https://sonarcloud.io"
+  		}
 	}
 }
 
