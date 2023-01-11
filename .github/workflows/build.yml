@@ -1,18 +1,10 @@
-name: Build
+name: 'CI'
 
-# run workflow on manual dispatches or push/pull request to main branch
-on: 
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+on:
   pull_request:
-    branches:
-      - main
 
 jobs:
-  # build on ubuntu/macos/windows with java 11/17 and Node 16
-  build:
+  build-test:
     strategy:
       matrix:
         java: [ 11 ]
@@ -35,13 +27,12 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Build Language Server
         run: language-server/gradlew -p language-server/ build --no-daemon
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        if: success() || failure()        # upload test results even if previous step failed
         with:
-          name: JUnit Test Results (${{ matrix.os }} Java ${{ matrix.Java }})
+          name: test-results-${{ matrix.os }}
           path: language-server/org.big.erd/build/test-results/test/TEST-*.xml, language-server/org.big.erd.ide/build/test-results/test/TEST-*.xml
-          reporter: java-junit
       - name: Build Webview
         run: yarn --cwd webview
       - name: Build Extension
