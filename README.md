@@ -1,6 +1,6 @@
 <!-- LOGO -->
 <p align="center">
-  <img src="./extension/media/logo.png" alt="Logo" width="150" height="150" />
+  <img src="./extension/media/logo.png" alt="Logo" width="150" height="150"/>
 </p>
 
 <!-- TITLE -->
